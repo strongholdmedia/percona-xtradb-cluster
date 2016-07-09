@@ -659,7 +659,7 @@ cmp_dtuple_rec_with_match_low(
 					in current field */
 	int		ret;		/* return value */
 
-	ut_ad(dtuple && rec && matched_fields && matched_bytes);
+	ut_ad((dtuple != NULL) && (rec != NULL) && (matched_fields != NULL) && (matched_bytes != NULL));
 	ut_ad(dtuple_check_typed(dtuple));
 	ut_ad(rec_offs_validate(rec, NULL, offsets));
 
@@ -1139,7 +1139,7 @@ cmp_rec_rec_with_match(
 	int		ret = 0;	/* return value */
 	ulint		comp;
 
-	ut_ad(rec1 && rec2 && index);
+	ut_ad((rec1 != NULL) && (rec2 != NULL) && (index != NULL));
 	ut_ad(rec_offs_validate(rec1, index, offsets1));
 	ut_ad(rec_offs_validate(rec2, index, offsets2));
 	ut_ad(rec_offs_comp(offsets1) == rec_offs_comp(offsets2));
@@ -1375,7 +1375,7 @@ cmp_debug_dtuple_rec_with_match(
 	int		ret;		/* return value */
 	ulint		cur_field;	/* current field number */
 
-	ut_ad(dtuple && rec && matched_fields);
+	ut_ad((dtuple != NULL) && (rec != NULL) && (matched_fields != NULL));
 	ut_ad(dtuple_check_typed(dtuple));
 	ut_ad(rec_offs_validate(rec, NULL, offsets));
 

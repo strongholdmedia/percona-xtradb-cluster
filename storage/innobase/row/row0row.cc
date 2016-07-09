@@ -240,7 +240,7 @@ row_build(
 	ulint			offsets_[REC_OFFS_NORMAL_SIZE];
 	rec_offs_init(offsets_);
 
-	ut_ad(index && rec && heap);
+	ut_ad((index != NULL) && (rec != NULL) && (heap != NULL));
 	ut_ad(dict_index_is_clust(index));
 	ut_ad(!mutex_own(&trx_sys->mutex));
 	ut_ad(!col_map || col_table);
@@ -291,7 +291,7 @@ row_build(
 	}
 
 	if (add_cols) {
-		ut_ad(col_map);
+		ut_ad(col_map != NULL);
 		row = dtuple_copy(add_cols, heap);
 		/* dict_table_copy_types() would set the fields to NULL */
 		for (ulint i = 0; i < dict_table_get_n_cols(col_table); i++) {
@@ -409,11 +409,11 @@ row_rec_to_index_entry_low(
 	ulint		len;
 	ulint		rec_len;
 
-	ut_ad(rec && heap && index);
+	ut_ad((rec != NULL) && (heap != NULL) && (index != NULL));
 	/* Because this function may be invoked by row0merge.cc
 	on a record whose header is in different format, the check
 	rec_offs_validate(rec, index, offsets) must be avoided here. */
-	ut_ad(n_ext);
+	ut_ad(n_ext != NULL);
 	*n_ext = 0;
 
 	rec_len = rec_offs_n_fields(offsets);
@@ -464,7 +464,7 @@ row_rec_to_index_entry(
 	byte*		buf;
 	const rec_t*	copy_rec;
 
-	ut_ad(rec && heap && index);
+	ut_ad((rec != NULL) && (heap != NULL) && (index != NULL));
 	ut_ad(rec_offs_validate(rec, index, offsets));
 
 	/* Take a copy of rec to heap */
@@ -523,7 +523,7 @@ row_build_row_ref(
 	ulint*		offsets		= offsets_;
 	rec_offs_init(offsets_);
 
-	ut_ad(index && rec && heap);
+	ut_ad((index != NULL) && (rec != NULL) && (heap != NULL));
 	ut_ad(!dict_index_is_clust(index));
 
 	offsets = rec_get_offsets(rec, index, offsets,
