@@ -452,7 +452,7 @@ lock_rec_get_nth_bit(
 {
 	const byte*	b;
 
-	ut_ad(lock != NULL);
+	ut_ad(lock);
 	ut_ad(lock_get_type_low(lock) == LOCK_REC);
 
 	if (i >= lock->un_member.rec_lock.n_bits) {
@@ -683,7 +683,7 @@ lock_get_mode(
 /*==========*/
 	const lock_t*	lock)	/*!< in: lock */
 {
-	ut_ad(lock != NULL);
+	ut_ad(lock);
 
 	return(static_cast<enum lock_mode>(lock->type_mode & LOCK_MODE_MASK));
 }
@@ -697,7 +697,7 @@ lock_get_wait(
 /*==========*/
 	const lock_t*	lock)	/*!< in: lock */
 {
-	ut_ad(lock != NULL);
+	ut_ad(lock);
 
 	return(lock->type_mode & LOCK_WAIT);
 }
@@ -802,8 +802,8 @@ lock_is_table_exclusive(
 	const lock_t*	lock;
 	ibool		ok	= FALSE;
 
-	ut_ad(table != NULL);
-	ut_ad(trx != NULL);
+	ut_ad(table);
+	ut_ad(trx);
 
 	lock_mutex_enter();
 
@@ -852,7 +852,7 @@ lock_set_lock_and_trx_wait(
 	lock_t*	lock,	/*!< in: lock */
 	trx_t*	trx)	/*!< in/out: trx */
 {
-	ut_ad(lock != NULL);
+	ut_ad(lock);
 	ut_ad(lock->trx == trx);
 	ut_ad(trx->lock.wait_lock == NULL);
 	ut_ad(lock_mutex_own());
@@ -888,7 +888,7 @@ lock_rec_get_gap(
 /*=============*/
 	const lock_t*	lock)	/*!< in: record lock */
 {
-	ut_ad(lock != NULL);
+	ut_ad(lock);
 	ut_ad(lock_get_type_low(lock) == LOCK_REC);
 
 	return(lock->type_mode & LOCK_GAP);
@@ -903,7 +903,7 @@ lock_rec_get_rec_not_gap(
 /*=====================*/
 	const lock_t*	lock)	/*!< in: record lock */
 {
-	ut_ad(lock != NULL);
+	ut_ad(lock);
 	ut_ad(lock_get_type_low(lock) == LOCK_REC);
 
 	return(lock->type_mode & LOCK_REC_NOT_GAP);
@@ -918,7 +918,7 @@ lock_rec_get_insert_intention(
 /*==========================*/
 	const lock_t*	lock)	/*!< in: record lock */
 {
-	ut_ad(lock != NULL);
+	ut_ad(lock);
 	ut_ad(lock_get_type_low(lock) == LOCK_REC);
 
 	return(lock->type_mode & LOCK_INSERT_INTENTION);
@@ -980,7 +980,7 @@ lock_rec_has_to_wait(
 				index page: we know then that the lock
 				request is really for a 'gap' type lock */
 {
-	ut_ad((trx != NULL) && (lock2 != NULL));
+	ut_ad(trx && lock2);
 	ut_ad(lock_get_type_low(lock2) == LOCK_REC);
 
 	if (trx != lock2->trx
@@ -1105,7 +1105,7 @@ lock_has_to_wait(
 				on the same record as in lock1 if the
 				locks are record locks */
 {
-	ut_ad((lock1 != NULL) && (lock2 != NULL));
+	ut_ad(lock1 && lock2);
 
 	if (lock1->trx != lock2->trx
 	    && !lock_mode_compatible(lock_get_mode(lock1),
@@ -1158,7 +1158,7 @@ lock_rec_set_nth_bit(
 	ulint	byte_index;
 	ulint	bit_index;
 
-	ut_ad(lock != NULL);
+	ut_ad(lock);
 	ut_ad(lock_get_type_low(lock) == LOCK_REC);
 	ut_ad(i < lock->un_member.rec_lock.n_bits);
 
@@ -1205,7 +1205,7 @@ lock_rec_reset_nth_bit(
 	ulint	byte_index;
 	ulint	bit_index;
 
-	ut_ad(lock != NULL);
+	ut_ad(lock);
 	ut_ad(lock_get_type_low(lock) == LOCK_REC);
 	ut_ad(i < lock->un_member.rec_lock.n_bits);
 
@@ -1472,7 +1472,7 @@ lock_rec_get_prev(
 	     /* No op */;
 	     lock = lock_rec_get_next_on_page(lock)) {
 
-		ut_ad(lock != NULL);
+		ut_ad(lock);
 
 		if (lock == in_lock) {
 
@@ -3943,7 +3943,7 @@ lock_get_next_lock(
 			ut_ad(heap_no == ULINT_UNDEFINED);
 			ut_ad(lock_get_type_low(lock) == LOCK_TABLE);
 
-			lock = UT_LIST_GET_NEXT(un_member.tab_lock.locks, lock);
+			lock = UT_LIST_GET_PREV(un_member.tab_lock.locks, lock);
 		}
 	} while (lock != NULL
 		 && lock->trx->lock.deadlock_mark > ctx->mark_start);
@@ -3993,8 +3993,7 @@ lock_get_first_lock(
 	} else {
 		*heap_no = ULINT_UNDEFINED;
 		ut_ad(lock_get_type_low(lock) == LOCK_TABLE);
-		dict_table_t*   table = lock->un_member.tab_lock.table;
-		lock = UT_LIST_GET_FIRST(table->locks);
+		lock = UT_LIST_GET_PREV(un_member.tab_lock.locks, lock);
 	}
 
 	ut_a(lock != NULL);
@@ -4421,7 +4420,7 @@ lock_table_create(
 {
 	lock_t*	lock;
 
-	ut_ad((table != NULL) && (trx != NULL));
+	ut_ad(table && trx);
 	ut_ad(lock_mutex_own());
 	ut_ad(trx_mutex_own(trx));
 
@@ -4818,7 +4817,7 @@ lock_table(
 	dberr_t		err;
 	const lock_t*	wait_for;
 
-	ut_ad((table != NULL) && (thr != NULL));
+	ut_ad(table && thr);
 
 	if (flags & BTR_NO_LOCKING_FLAG) {
 
@@ -5005,8 +5004,8 @@ lock_rec_unlock(
 	const char*	stmt;
 	size_t		stmt_len;
 
-	ut_ad(trx != NULL);
-	ut_ad(rec != NULL);
+	ut_ad(trx);
+	ut_ad(rec);
 	ut_ad(block->frame == page_align(rec));
 	ut_ad(!trx->lock.wait_lock);
 	ut_ad(trx_state_eq(trx, TRX_STATE_ACTIVE));
@@ -5995,7 +5994,7 @@ lock_rec_queue_validate(
 	const lock_t*	lock;
 	ulint		heap_no;
 
-	ut_a(rec != NULL);
+	ut_a(rec);
 	ut_a(block->frame == page_align(rec));
 	ut_ad(rec_offs_validate(rec, index, offsets));
 	ut_ad(!page_rec_is_comp(rec) == !rec_offs_comp(offsets));
@@ -6155,7 +6154,7 @@ loop:
 		if (i == 1 || lock_rec_get_nth_bit(lock, i)) {
 
 			rec = page_find_rec_with_heap_no(block->frame, i);
-			ut_a(rec != NULL);
+			ut_a(rec);
 			offsets = rec_get_offsets(rec, lock->index, offsets,
 						  ULINT_UNDEFINED, &heap);
 #if 0

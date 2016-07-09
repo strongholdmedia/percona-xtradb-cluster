@@ -67,7 +67,7 @@ dtuple_coll_cmp(
 	ulint	n_fields;
 	ulint	i;
 
-	ut_ad((tuple1 != NULL) && (tuple2 != NULL));
+	ut_ad(tuple1 && tuple2);
 	ut_ad(tuple1->magic_n == DATA_TUPLE_MAGIC_N);
 	ut_ad(tuple2->magic_n == DATA_TUPLE_MAGIC_N);
 	ut_ad(dtuple_check_typed(tuple1));
@@ -105,7 +105,7 @@ dtuple_set_n_fields(
 	dtuple_t*	tuple,		/*!< in: tuple */
 	ulint		n_fields)	/*!< in: number of fields */
 {
-	ut_ad(tuple != NULL);
+	ut_ad(tuple);
 
 	tuple->n_fields = n_fields;
 	tuple->n_fields_cmp = n_fields;

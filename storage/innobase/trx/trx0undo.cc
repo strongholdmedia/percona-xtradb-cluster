@@ -443,7 +443,7 @@ trx_undo_seg_create(
 	ibool		success;
 	dberr_t		err = DB_SUCCESS;
 
-	ut_ad((mtr != NULL) && (id != NULL) && (rseg_hdr != NULL));
+	ut_ad(mtr && id && rseg_hdr);
 	ut_ad(mutex_own(&(rseg->mutex)));
 
 	/*	fputs(type == TRX_UNDO_INSERT
@@ -556,7 +556,7 @@ trx_undo_header_create(
 	ulint		free;
 	ulint		new_free;
 
-	ut_ad((mtr != NULL) && (undo_page != NULL));
+	ut_ad(mtr && undo_page);
 
 	page_hdr = undo_page + TRX_UNDO_PAGE_HDR;
 	seg_hdr = undo_page + TRX_UNDO_SEG_HDR;
@@ -763,7 +763,7 @@ trx_undo_insert_header_reuse(
 	ulint		free;
 	ulint		new_free;
 
-	ut_ad((mtr != NULL) && (undo_page != NULL));
+	ut_ad(mtr && undo_page);
 
 	page_hdr = undo_page + TRX_UNDO_PAGE_HDR;
 	seg_hdr = undo_page + TRX_UNDO_SEG_HDR;
@@ -831,7 +831,7 @@ trx_undo_parse_discard_latest(
 	page_t*	page,	/*!< in: page or NULL */
 	mtr_t*	mtr)	/*!< in: mtr or NULL */
 {
-	ut_ad(end_ptr != NULL);
+	ut_ad(end_ptr);
 
 	if (page) {
 		trx_undo_discard_latest_update_undo(page, mtr);
@@ -1763,7 +1763,7 @@ trx_undo_assign_undo(
 	mtr_t		mtr;
 	dberr_t		err = DB_SUCCESS;
 
-	ut_ad(trx != NULL);
+	ut_ad(trx);
 
 	if (trx->rseg == NULL) {
 		return(DB_READ_ONLY);
@@ -1879,7 +1879,7 @@ trx_undo_set_state_at_prepare(
 	page_t*		undo_page;
 	ulint		offset;
 
-	ut_ad((trx != NULL) && (undo != NULL) && (mtr != NULL));
+	ut_ad(trx && undo && mtr);
 
 	if (undo->id >= TRX_RSEG_N_SLOTS) {
 		fprintf(stderr, "InnoDB: Error: undo->id is %lu\n",
@@ -1965,7 +1965,7 @@ trx_undo_insert_cleanup(
 	trx_rseg_t*	rseg;
 
 	undo = trx->insert_undo;
-	ut_ad(undo != NULL);
+	ut_ad(undo);
 
 	rseg = trx->rseg;
 

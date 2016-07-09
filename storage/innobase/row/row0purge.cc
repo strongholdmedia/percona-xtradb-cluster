@@ -69,7 +69,7 @@ row_purge_node_create(
 {
 	purge_node_t*	node;
 
-	ut_ad((parent != NULL) && (heap != NULL));
+	ut_ad(parent && heap);
 
 	node = static_cast<purge_node_t*>(
 		mem_heap_zalloc(heap, sizeof(*node)));
@@ -745,7 +745,7 @@ row_purge_parse_undo_rec(
 	ulint		info_bits;
 	ulint		type;
 
-	ut_ad((node != NULL) && (thr != NULL));
+	ut_ad(node && thr);
 
 	ptr = trx_undo_rec_get_pars(
 		undo_rec, &type, &node->cmpl_info,
@@ -935,7 +935,7 @@ row_purge_end(
 {
 	purge_node_t*	node;
 
-	ut_ad(thr != NULL);
+	ut_ad(thr);
 
 	node = static_cast<purge_node_t*>(thr->run_node);
 
@@ -964,7 +964,7 @@ row_purge_step(
 {
 	purge_node_t*	node;
 
-	ut_ad(thr != NULL);
+	ut_ad(thr);
 
 	node = static_cast<purge_node_t*>(thr->run_node);
 
