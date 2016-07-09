@@ -555,9 +555,9 @@ rec_get_offsets_func(
 	ulint	n;
 	ulint	size;
 
-	ut_ad(rec);
-	ut_ad(index);
-	ut_ad(heap);
+	ut_ad(rec != NULL);
+	ut_ad(index != NULL);
+	ut_ad(heap != NULL);
 
 	if (dict_table_is_comp(index->table)) {
 		switch (UNIV_EXPECT(rec_get_status(rec),
@@ -636,9 +636,9 @@ rec_get_offsets_reverse(
 	ulint		null_mask;
 	ulint		n_node_ptr_field;
 
-	ut_ad(extra);
-	ut_ad(index);
-	ut_ad(offsets);
+	ut_ad(extra != NULL);
+	ut_ad(index != NULL);
+	ut_ad(offsets != NULL);
 	ut_ad(dict_table_is_comp(index->table));
 
 	if (UNIV_UNLIKELY(node_ptr)) {
@@ -747,8 +747,8 @@ rec_get_nth_field_offs_old(
 	ulint	os;
 	ulint	next_os;
 
-	ut_ad(len);
-	ut_a(rec);
+	ut_ad(len != NULL);
+	ut_a(rec != NULL);
 	ut_a(n < rec_get_n_fields_old(rec));
 
 	if (rec_get_1byte_offs_flag(rec)) {
@@ -808,7 +808,7 @@ rec_get_converted_size_comp_prefix_low(
 	ulint	n_null	= index->n_nullable;
 	ut_ad(n_fields > 0);
 	ut_ad(n_fields <= dict_index_get_n_fields(index));
-	ut_ad(!temp || extra);
+	ut_ad(!temp || (extra != NULL));
 
 	extra_size = temp
 		? UT_BITS_IN_BYTES(n_null)
@@ -1037,7 +1037,7 @@ rec_convert_dtuple_to_rec_old(
 	ulint		len;
 	ulint		i;
 
-	ut_ad(buf && dtuple);
+	ut_ad((buf != NULL) && (dtuple != NULL));
 	ut_ad(dtuple_validate(dtuple));
 	ut_ad(dtuple_check_typed(dtuple));
 
@@ -1341,7 +1341,7 @@ rec_convert_dtuple_to_rec(
 {
 	rec_t*	rec;
 
-	ut_ad(buf && index && dtuple);
+	ut_ad((buf != NULL) && (index != NULL) && (dtuple != NULL));
 	ut_ad(dtuple_validate(dtuple));
 	ut_ad(dtuple_check_typed(dtuple));
 
@@ -1779,7 +1779,7 @@ rec_print_old(
 	ulint		n;
 	ulint		i;
 
-	ut_ad(rec);
+	ut_ad(rec != NULL);
 
 	n = rec_get_n_fields_old(rec);
 
@@ -1874,8 +1874,8 @@ rec_print_new(
 	const rec_t*	rec,	/*!< in: physical record */
 	const ulint*	offsets)/*!< in: array returned by rec_get_offsets() */
 {
-	ut_ad(rec);
-	ut_ad(offsets);
+	ut_ad(rec != NULL);
+	ut_ad(offsets != NULL);
 	ut_ad(rec_offs_validate(rec, NULL, offsets));
 
 	if (!rec_offs_comp(offsets)) {
@@ -1902,7 +1902,7 @@ rec_print(
 	const rec_t*		rec,	/*!< in: physical record */
 	const dict_index_t*	index)	/*!< in: record descriptor */
 {
-	ut_ad(index);
+	ut_ad(index != NULL);
 
 	if (!dict_table_is_comp(index->table)) {
 		rec_print_old(file, rec);
@@ -1983,8 +1983,8 @@ wsrep_rec_get_foreign_key(
 	ulint		offsets_[REC_OFFS_NORMAL_SIZE];
         const ulint*    offsets;
 
-	ut_ad(index_for);
-	ut_ad(index_ref);
+	ut_ad(index_for != NULL);
+	ut_ad(index_ref != NULL);
 
         rec_offs_init(offsets_);
 	offsets = rec_get_offsets(rec, index_for, offsets_, 
@@ -1992,7 +1992,7 @@ wsrep_rec_get_foreign_key(
 
 	ut_ad(rec_offs_validate(rec, NULL, offsets));
 
-	ut_ad(rec);
+	ut_ad(rec != NULL);
 
 	key_parts = dict_index_get_n_unique_in_tree(index_for);
 	for (i = 0; 

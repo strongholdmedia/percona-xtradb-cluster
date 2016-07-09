@@ -843,7 +843,7 @@ dict_index_get_nth_col_or_prefix_pos(
 	ulint			pos;
 	ulint			n_fields;
 
-	ut_ad(index);
+	ut_ad(index != NULL);
 	ut_ad(index->magic_n == DICT_INDEX_MAGIC_N);
 
 	col = dict_table_get_nth_col(index->table, n);
@@ -884,7 +884,7 @@ dict_index_contains_col_or_prefix(
 	ulint			pos;
 	ulint			n_fields;
 
-	ut_ad(index);
+	ut_ad(index != NULL);
 	ut_ad(index->magic_n == DICT_INDEX_MAGIC_N);
 
 	if (dict_index_is_clust(index)) {
@@ -928,7 +928,7 @@ dict_index_get_nth_field_pos(
 	ulint			n_fields;
 	ulint			pos;
 
-	ut_ad(index);
+	ut_ad(index != NULL);
 	ut_ad(index->magic_n == DICT_INDEX_MAGIC_N);
 
 	field2 = dict_index_get_nth_field(index2, n);
@@ -2484,7 +2484,7 @@ dict_index_add_to_cache(
 	ulint		n_ord;
 	ulint		i;
 
-	ut_ad(index);
+	ut_ad(index != NULL);
 	ut_ad(mutex_own(&(dict_sys->mutex)));
 	ut_ad(index->n_def == index->n_fields);
 	ut_ad(index->magic_n == DICT_INDEX_MAGIC_N);
@@ -5714,7 +5714,7 @@ dict_set_corrupted(
 		row_mysql_lock_data_dictionary(trx);
 	}
 
-	ut_ad(index);
+	ut_ad(index != NULL);
 	ut_ad(mutex_own(&dict_sys->mutex));
 	ut_ad(!dict_table_is_comp(dict_sys->sys_tables));
 	ut_ad(!dict_table_is_comp(dict_sys->sys_indexes));
@@ -5809,7 +5809,7 @@ dict_set_corrupted_index_cache_only(
 	dict_index_t*	index,		/*!< in/out: index */
 	dict_table_t*	table)		/*!< in/out: table */
 {
-	ut_ad(index);
+	ut_ad(index != NULL);
 	ut_ad(mutex_own(&dict_sys->mutex));
 	ut_ad(!dict_table_is_comp(dict_sys->sys_tables));
 	ut_ad(!dict_table_is_comp(dict_sys->sys_indexes));
@@ -5819,8 +5819,8 @@ dict_set_corrupted_index_cache_only(
 	if (dict_index_is_clust(index)) {
 		dict_table_t*	corrupt_table;
 
-		corrupt_table = table ? table : index->table;
-		ut_ad(!index->table || !table || index->table  == table);
+		corrupt_table = (table != NULL) ? table : index->table;
+		ut_ad((index->table != NULL) || (table != NULL) || index->table  == table);
 
 		if (corrupt_table) {
 			corrupt_table->corrupted = TRUE;
@@ -5937,11 +5937,6 @@ dict_table_get_index_on_name(
 	const char*	name)	/*!< in: name of the index to find */
 {
 	dict_index_t*	index;
-
-	/* If name is NULL, just return */
-	if (!name) {
-		return(NULL);
-	}
 
 	index = dict_table_get_first_index(table);
 
@@ -6702,7 +6697,7 @@ dict_index_zip_success(
 /*===================*/
 	dict_index_t*	index)	/*!< in/out: index to be updated. */
 {
-	ut_ad(index);
+	ut_ad(index != NULL);
 
 	ulint zip_threshold = zip_failure_threshold_pct;
 	if (!zip_threshold) {
@@ -6725,7 +6720,7 @@ dict_index_zip_failure(
 /*===================*/
 	dict_index_t*	index)	/*!< in/out: index to be updated. */
 {
-	ut_ad(index);
+	ut_ad(index != NULL);
 
 	ulint zip_threshold = zip_failure_threshold_pct;
 	if (!zip_threshold) {
@@ -6754,7 +6749,7 @@ dict_index_zip_pad_optimal_page_size(
 	ulint	min_sz;
 	ulint	sz;
 
-	ut_ad(index);
+	ut_ad(index != NULL);
 
 	if (!zip_failure_threshold_pct) {
 		/* Disabled by user. */

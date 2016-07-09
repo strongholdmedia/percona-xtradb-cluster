@@ -2075,7 +2075,7 @@ btr_parse_page_reorganize(
 {
 	ulint	level;
 
-	ut_ad(ptr && end_ptr);
+	ut_ad((ptr != NULL) && (end_ptr != NULL));
 
 	/* If dealing with a compressed page the record has the
 	compression level used during original compression written in
@@ -2525,7 +2525,7 @@ btr_page_get_split_rec(
 		} else {
 			next_rec = page_rec_get_next(rec);
 		}
-		ut_ad(next_rec);
+		ut_ad(next_rec != NULL);
 		if (!page_rec_is_supremum(next_rec)) {
 			rec = next_rec;
 		}
@@ -2880,7 +2880,7 @@ btr_insert_into_right_sibling(
 	ut_ad(mtr_memo_contains(mtr, dict_index_get_lock(cursor->index),
 				MTR_MEMO_X_LOCK));
 	ut_ad(mtr_memo_contains(mtr, block, MTR_MEMO_PAGE_X_FIX));
-	ut_ad(heap);
+	ut_ad(heap != NULL);
 
 	if (next_page_no == FIL_NULL || !page_rec_is_supremum(
 			page_rec_get_next(btr_cur_get_rec(cursor)))) {
@@ -3078,7 +3078,7 @@ func_start:
 	} else if (btr_page_get_split_rec_to_left(cursor, &split_rec)) {
 		direction = FSP_DOWN;
 		hint_page_no = page_no - 1;
-		ut_ad(split_rec);
+		ut_ad(split_rec != NULL);
 	} else {
 		direction = FSP_UP;
 		hint_page_no = page_no + 1;
@@ -3413,7 +3413,7 @@ btr_level_list_remove_func(
 	ulint	prev_page_no;
 	ulint	next_page_no;
 
-	ut_ad(page && mtr);
+	ut_ad((page != NULL) && (mtr != NULL));
 	ut_ad(mtr_memo_contains_page(mtr, page, MTR_MEMO_PAGE_X_FIX));
 	ut_ad(space == page_get_space_id(page));
 	/* Get the previous and next page numbers of page */

@@ -247,7 +247,7 @@ btr_cur_latch_leaves(
 	ulint		right_page_no;
 	buf_block_t*	get_block;
 
-	ut_ad(page && mtr);
+	ut_ad((page != NULL) && (mtr != NULL));
 
 	switch (latch_mode) {
 	case BTR_SEARCH_LEAF:
@@ -1366,7 +1366,7 @@ btr_cur_optimistic_insert(
 	page = buf_block_get_frame(block);
 	index = cursor->index;
 
-	ut_ad((thr && thr_get_trx(thr)->fake_changes)
+	ut_ad(((thr != NULL) && thr_get_trx(thr)->fake_changes)
 	      || mtr_memo_contains(mtr, block, MTR_MEMO_PAGE_X_FIX));
 	ut_ad(!dict_index_is_online_ddl(index)
 	      || dict_index_is_clust(index)
@@ -1382,7 +1382,7 @@ btr_cur_optimistic_insert(
 #endif /* UNIV_DEBUG_VALGRIND */
 
 #ifdef UNIV_DEBUG
-	if (btr_cur_print_record_ops && thr) {
+	if (btr_cur_print_record_ops && (thr != NULL)) {
 		btr_cur_trx_report(thr_get_trx(thr)->id, index, "insert ");
 		dtuple_print(stderr, entry);
 	}
@@ -1648,10 +1648,10 @@ btr_cur_pessimistic_insert(
 
 	*big_rec = NULL;
 
-	ut_ad((thr && thr_get_trx(thr)->fake_changes) || mtr_memo_contains(mtr,
+	ut_ad(((thr != NULL) && thr_get_trx(thr)->fake_changes) || mtr_memo_contains(mtr,
 				dict_index_get_lock(btr_cur_get_index(cursor)),
 				MTR_MEMO_X_LOCK));
-	ut_ad((thr && thr_get_trx(thr)->fake_changes) || mtr_memo_contains(mtr, btr_cur_get_block(cursor),
+	ut_ad(((thr != NULL) && thr_get_trx(thr)->fake_changes) || mtr_memo_contains(mtr, btr_cur_get_block(cursor),
 				MTR_MEMO_PAGE_X_FIX));
 	ut_ad(!dict_index_is_online_ddl(index)
 	      || dict_index_is_clust(index)
@@ -1801,7 +1801,7 @@ btr_cur_upd_lock_and_undo(
 	const rec_t*	rec;
 	dberr_t		err;
 
-	ut_ad(thr || (flags & BTR_NO_LOCKING_FLAG));
+	ut_ad((thr != NULL) || (flags & BTR_NO_LOCKING_FLAG));
 
 	if (UNIV_UNLIKELY(thr && thr_get_trx(thr)->fake_changes)) {
 		/* skip LOCK, UNDO */
@@ -2014,7 +2014,7 @@ btr_cur_update_alloc_zip_func(
 	const page_t*	page = page_cur_get_page(cursor);
 
 	ut_ad(page_zip == page_cur_get_page_zip(cursor));
-	ut_ad(page_zip);
+	ut_ad(page_zip != NULL);
 	ut_ad(!dict_index_is_ibuf(index));
 	ut_ad(rec_offs_validate(page_cur_get_rec(cursor), index, offsets));
 
@@ -3141,7 +3141,7 @@ btr_cur_del_mark_set_clust_rec(
 	ut_ad(page_is_leaf(page_align(rec)));
 
 #ifdef UNIV_DEBUG
-	if (btr_cur_print_record_ops && thr) {
+	if (btr_cur_print_record_ops && (thr != NULL)) {
 		btr_cur_trx_report(thr_get_trx(thr)->id, index, "del mark ");
 		rec_print_new(stderr, rec, offsets);
 	}
@@ -3301,7 +3301,7 @@ btr_cur_del_mark_set_sec_rec(
 	rec = btr_cur_get_rec(cursor);
 
 #ifdef UNIV_DEBUG
-	if (btr_cur_print_record_ops && thr) {
+	if (btr_cur_print_record_ops && (thr != NULL)) {
 		btr_cur_trx_report(thr_get_trx(thr)->id, cursor->index,
 				   "del mark ");
 		rec_print(stderr, rec, cursor->index);
@@ -4438,7 +4438,7 @@ btr_cur_disown_inherited_fields(
 	ut_ad(rec_offs_validate(rec, index, offsets));
 	ut_ad(!rec_offs_comp(offsets) || !rec_get_node_ptr_flag(rec));
 	ut_ad(rec_offs_any_extern(offsets));
-	ut_ad(mtr);
+	ut_ad(mtr != NULL);
 
 	for (i = 0; i < rec_offs_n_fields(offsets); i++) {
 		if (rec_offs_nth_extern(offsets, i)
@@ -4501,8 +4501,8 @@ btr_push_update_extern_fields(
 	ulint			n;
 	const upd_field_t*	uf;
 
-	ut_ad(tuple);
-	ut_ad(update);
+	ut_ad(tuple != NULL);
+	ut_ad(update != NULL);
 
 	uf = update->fields;
 	n = upd_get_n_fields(update);
@@ -4687,7 +4687,7 @@ btr_store_big_rec_extern_fields(
 
 	ut_ad(rec_offs_validate(rec, index, offsets));
 	ut_ad(rec_offs_any_extern(offsets));
-	ut_ad(btr_mtr);
+	ut_ad(btr_mtr != NULL);
 	ut_ad(mtr_memo_contains(btr_mtr, dict_index_get_lock(index),
 				MTR_MEMO_X_LOCK));
 	ut_ad(mtr_memo_contains(btr_mtr, rec_block, MTR_MEMO_PAGE_X_FIX));

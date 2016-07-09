@@ -1013,7 +1013,9 @@ row_get_prebuilt_insert_row(
 {
 	dict_table_t*		table	= prebuilt->table;
 
-	ut_ad(prebuilt && table && prebuilt->trx);
+	ut_ad(prebuilt != NULL);
+    ut_ad(table != NULL);
+    ut_ad(prebuilt->trx != NULL);
 
 	if (prebuilt->ins_node != 0) {
 
@@ -1138,7 +1140,7 @@ row_lock_table_autoinc_for_mysql(
 	dberr_t			err;
 	ibool			was_lock_wait;
 
-	ut_ad(trx);
+	ut_ad(trx != NULL);
 
 	/* If we already hold an AUTOINC lock on the table then do nothing.
         Note: We peek at the value of the current owner without acquiring
@@ -1215,7 +1217,7 @@ row_lock_table_for_mysql(
 	dberr_t		err;
 	ibool		was_lock_wait;
 
-	ut_ad(trx);
+	ut_ad(trx != NULL);
 
 	trx->op_info = "setting table lock";
 
@@ -1294,7 +1296,7 @@ row_insert_for_mysql(
 	ins_node_t*	node		= prebuilt->ins_node;
 	dict_table_t*	table		= prebuilt->table;
 
-	ut_ad(trx);
+	ut_ad(trx != NULL);
 
 	if (dict_table_is_discarded(prebuilt->table)) {
 		ib_logf(IB_LOG_LEVEL_ERROR,
@@ -1473,7 +1475,7 @@ row_prebuild_sel_graph(
 {
 	sel_node_t*	node;
 
-	ut_ad(prebuilt && prebuilt->trx);
+	ut_ad((prebuilt != NULL) && (prebuilt->trx != NULL));
 
 	if (prebuilt->sel_graph == NULL) {
 
@@ -1540,7 +1542,9 @@ row_get_prebuilt_update_vector(
 	dict_table_t*	table	= prebuilt->table;
 	upd_node_t*	node;
 
-	ut_ad(prebuilt && table && prebuilt->trx);
+	ut_ad(prebuilt != NULL);
+    ut_ad(table != NULL);
+    ut_ad(prebuilt->trx != NULL);
 
 	if (prebuilt->upd_node == NULL) {
 
@@ -1684,7 +1688,7 @@ row_update_for_mysql(
 	trx_t*		trx		= prebuilt->trx;
 	ulint		fk_depth	= 0;
 
-	ut_ad(prebuilt && trx);
+	ut_ad((prebuilt != NULL) && (trx != NULL));
 	UT_NOT_USED(mysql_rec);
 
 	if (prebuilt->table->ibd_file_missing) {
@@ -1883,7 +1887,7 @@ row_unlock_for_mysql(
 	btr_pcur_t*	clust_pcur	= &prebuilt->clust_pcur;
 	trx_t*		trx		= prebuilt->trx;
 
-	ut_ad(prebuilt && trx);
+	ut_ad((prebuilt != NULL) && (trx != NULL));
 
 	if (UNIV_UNLIKELY
 	    (!srv_locks_unsafe_for_binlog
@@ -2510,7 +2514,7 @@ row_create_index_for_mysql(
 
 		idx = dict_table_get_index_on_name(table, index_name);
 
-		ut_ad(idx);
+		ut_ad(idx != NULL);
 		err = fts_create_index_tables(trx, idx);
 	}
 
@@ -3156,7 +3160,7 @@ row_mysql_lock_table(
 	dberr_t		err;
 	sel_node_t*	node;
 
-	ut_ad(trx);
+	ut_ad(trx != NULL);
 	ut_ad(mode == LOCK_X || mode == LOCK_S);
 
 	heap = mem_heap_create(512);
@@ -3283,7 +3287,7 @@ row_truncate_table_for_mysql(
 	redo log records on the truncated tablespace, we will assign
 	a new tablespace identifier to the truncated tablespace. */
 
-	ut_ad(table);
+	ut_ad(table != NULL);
 
 	if (dict_table_is_discarded(table)) {
 		return(DB_TABLESPACE_DELETED);

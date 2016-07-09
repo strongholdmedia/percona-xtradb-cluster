@@ -771,7 +771,7 @@ row_upd_write_sys_vals_to_log(
 	mtr_t*		mtr __attribute__((unused))) /*!< in: mtr */
 {
 	ut_ad(dict_index_is_clust(index));
-	ut_ad(mtr);
+	ut_ad(mtr != NULL);
 
 	log_ptr += mach_write_compressed(log_ptr,
 					 dict_index_get_sys_col_pos(
@@ -1275,7 +1275,7 @@ row_upd_index_replace_new_col_vals_index_pos(
 	ulint		n_fields;
 	const ulint	zip_size	= dict_table_zip_size(index->table);
 
-	ut_ad(index);
+	ut_ad(index != NULL);
 
 	dtuple_set_info_bits(entry, update->info_bits);
 
@@ -1372,12 +1372,12 @@ row_upd_replace(
 	ulint*			ext_cols;
 	const dict_table_t*	table;
 
-	ut_ad(row);
-	ut_ad(ext);
-	ut_ad(index);
+	ut_ad(row != NULL);
+	ut_ad(ext != NULL);
+	ut_ad(index != NULL);
 	ut_ad(dict_index_is_clust(index));
-	ut_ad(update);
-	ut_ad(heap);
+	ut_ad(update != NULL);
+	ut_ad(heap != NULL);
 
 	n_cols = dtuple_get_n_fields(row);
 	table = index->table;
@@ -1461,11 +1461,11 @@ row_upd_changes_ord_field_binary_func(
 	ulint			i;
 	const dict_index_t*	clust_index;
 
-	ut_ad(index);
-	ut_ad(update);
-	ut_ad(thr);
-	ut_ad(thr->graph);
-	ut_ad(thr->graph->trx);
+	ut_ad(index != NULL);
+	ut_ad(update != NULL);
+	ut_ad(thr != NULL);
+	ut_ad(thr->graph != NULL);
+	ut_ad(thr->graph->trx != NULL);
 
 	n_unique = dict_index_get_n_unique(index);
 
@@ -1654,7 +1654,7 @@ row_upd_changes_first_fields_binary(
 	ulint		i, j;
 	dict_index_t*	clust_index;
 
-	ut_ad(update && index);
+	ut_ad((update != NULL) && (index != NULL));
 	ut_ad(n <= dict_index_get_n_fields(index));
 
 	n_upd_fields = upd_get_n_fields(update);
@@ -2185,7 +2185,7 @@ row_upd_clust_rec_by_insert(
 #ifdef WITH_WSREP
 	que_node_t *parent = que_node_get_parent(node);
 #endif /* WITH_WSREP */
-	ut_ad(node);
+	ut_ad(node != NULL);
 	ut_ad(dict_index_is_clust(index));
 
 	trx = thr_get_trx(thr);
@@ -2338,7 +2338,7 @@ row_upd_clust_rec(
 	dberr_t		err;
 	const dtuple_t*	rebuilt_old_pk	= NULL;
 
-	ut_ad(node);
+	ut_ad(node != NULL);
 	ut_ad(dict_index_is_clust(index));
 
 	pcur = node->pcur;
@@ -2506,7 +2506,7 @@ row_upd_del_mark_clust_rec(
 	que_node_t *parent = que_node_get_parent(node);
 #endif /* WITH_WSREP */
 
-	ut_ad(node);
+	ut_ad(node != NULL);
 	ut_ad(dict_index_is_clust(index));
 	ut_ad(node->is_delete);
 
@@ -2812,7 +2812,7 @@ row_upd(
 {
 	dberr_t		err	= DB_SUCCESS;
 
-	ut_ad(node && thr);
+	ut_ad((node != NULL) && (thr != NULL));
 
 	if (UNIV_LIKELY(node->in_mysql_interface)) {
 
@@ -2912,7 +2912,7 @@ row_upd_step(
 	dberr_t		err		= DB_SUCCESS;
 	trx_t*		trx;
 
-	ut_ad(thr);
+	ut_ad(thr != NULL);
 
 	trx = thr_get_trx(thr);
 

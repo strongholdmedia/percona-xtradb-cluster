@@ -2597,13 +2597,14 @@ dict_load_table_on_id(
 	btr_pcur_open_on_user_rec(sys_table_ids, tuple, PAGE_CUR_GE,
 				  BTR_SEARCH_LEAF, &pcur, &mtr);
 
-check_rec:
 	rec = btr_pcur_get_rec(&pcur);
 
 	if (page_rec_is_user_rec(rec)) {
 		/*---------------------------------------------------*/
 		/* Now we have the record in the secondary index
 		containing the table ID and NAME */
+
+check_rec:
 
 		field = rec_get_nth_field_old(
 			rec, DICT_FLD__SYS_TABLE_IDS__ID, &len);
@@ -2614,12 +2615,15 @@ check_rec:
 			if (rec_get_deleted_flag(rec, 0)) {
 				/* Until purge has completed, there
 				may be delete-marked duplicate records
-				for the same SYS_TABLES.ID.
-				Due to Bug #60049, some delete-marked
-				records may survive the purge forever. */
-				if (btr_pcur_move_to_next(&pcur, &mtr)) {
+				for the same SYS_TABLES.ID, but
+                different SYS_TABLES.NAME */
+                
+				while (btr_pcur_move_to_next(&pcur, &mtr)) {
+					rec = btr_pcur_get_rec(&pcur);
 
-					goto check_rec;
+					if (page_rec_is_user_rec(rec)) {
+						goto check_rec;
+					}
 				}
 			} else {
 				/* Now we get the table name from the record */

@@ -133,7 +133,7 @@ row_undo_node_create(
 {
 	undo_node_t*	undo;
 
-	ut_ad(trx && parent && heap);
+	ut_ad((trx != NULL) && (parent != NULL) && (heap != NULL));
 
 	undo = static_cast<undo_node_t*>(
 		mem_heap_alloc(heap, sizeof(undo_node_t)));
@@ -257,7 +257,7 @@ row_undo(
 	roll_ptr_t	roll_ptr;
 	ibool		locked_data_dict;
 
-	ut_ad(node && thr);
+	ut_ad((node != NULL) && (thr != NULL));
 
 	trx = node->trx;
 
@@ -337,7 +337,7 @@ row_undo_step(
 	undo_node_t*	node;
 	trx_t*		trx;
 
-	ut_ad(thr);
+	ut_ad(thr != NULL);
 
 	srv_inc_activity_count();
 
